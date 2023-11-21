@@ -21,18 +21,18 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "name")
-    @NotEmpty(message = "Name should be between 2 and 25 latin characters")
+    @NotEmpty
     @Size(min = 2, max = 25)
     private String name;
 
     @Column(name = "surname")
-    @NotEmpty(message = "Surname should be between 2 and 25 latin characters")
+    @NotEmpty
     @Size(min = 2, max = 25)
     private String surname;
 
     @Column(name = "age")
-    @Min(value = 0, message = "Age should be >= 0")
-    @Max(value = 127, message = "Age should be < 128")
+    @Min(value = 0)
+    @Max(value = 127)
     private int age;
 
     @Column(name = "email")
@@ -40,12 +40,12 @@ public class User implements UserDetails {
     private String email;
 
     @Column(name = "login")
-    @NotEmpty(message = "Login should be between 2 and 25 latin characters")
+    @NotEmpty
     @Size(min = 2, max = 25)
     private String login;
 
     @Column(name = "password")
-    @NotEmpty(message = "Password should be between 4 and 25 characters")
+    @NotEmpty
     @Size(min = 3)
     private String password;
 
