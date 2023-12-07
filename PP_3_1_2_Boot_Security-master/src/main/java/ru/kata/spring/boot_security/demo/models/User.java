@@ -5,8 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.Objects;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 public class User implements UserDetails {
@@ -18,35 +17,31 @@ public class User implements UserDetails {
 
     private String surname;
 
-    private String login;
+    private int age;
 
     private String email;
-
-    private int age;
 
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Role> roles;
+    private List<Role> roles;
 
     public User() {
     }
 
-    public User(String name, String surname, int age, String email, String login, String password, Set<Role> roles) {
+    public User(String email, String name, int age, String password, List<Role> roles) {
         this.name = name;
-        this.surname = surname;
-        this.age = age;
-        this.email = email;
-        this.login = login;
         this.password = password;
+        this.email = email;
+        this.age = age;
         this.roles = roles;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -82,26 +77,31 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public String getLogin() {
-        return login;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return getRoles();
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
 
     @Override
     public String getUsername() {
-        return login;
+        return name;
     }
 
     @Override
@@ -122,45 +122,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", age=" + age +
-                ", email='" + email + '\'' +
-                '}';
-    }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id);
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 17;
-
-        hash = 31 * hash + (name == null ? 0 : name.hashCode());
-        hash = 31 * hash + (login == null ? 0 : login.hashCode());
-        hash = (int) (31 * hash + id);
-        return hash;
     }
 }

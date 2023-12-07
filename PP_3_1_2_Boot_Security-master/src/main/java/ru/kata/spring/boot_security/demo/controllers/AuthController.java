@@ -9,7 +9,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 @Controller
 public class AuthController {
 
-    @GetMapping("/login")
+    @GetMapping()
     public String getSinglePage(Authentication authentication, Model model) {
         User authUser = (User) authentication.getPrincipal();
         model.addAttribute("authUser", authUser);

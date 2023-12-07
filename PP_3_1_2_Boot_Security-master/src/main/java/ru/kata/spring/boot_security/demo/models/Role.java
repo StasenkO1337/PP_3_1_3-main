@@ -34,20 +34,20 @@ public class Role implements GrantedAuthority {
         return id;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
 
+    public String getRole() {
+        return role;
+    }
+
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Set<User> getUsers() {
+        return users;
     }
 
     public void setUsers(Set<User> users) {
@@ -58,4 +58,5 @@ public class Role implements GrantedAuthority {
     public String getAuthority() {
         return getRole();
     }
+
 }

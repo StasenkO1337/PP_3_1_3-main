@@ -7,21 +7,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserDetailsService, UserService {
-    private UserRepository userRepository;
 
-    private BCryptPasswordEncoder bcryptPasswordEncoder;
+    private final UserRepository userRepository;
 
-    public UserServiceImpl(){
-    }
+    private final BCryptPasswordEncoder bcryptPasswordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder){
@@ -31,12 +27,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByName(username);
 
         if (user == null) {
             throw new UsernameNotFoundException("User not found!");
         }
-
         return user;
     }
 
@@ -46,13 +41,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Transactional
     public void addUser(User user) {
-        User newUser = userRepository.findByUsername(user.getName());
-
-        if (newUser != null) {
-            return;
-        }
-
-        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
         user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -64,14 +52,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Transactional
     public void updateUser(User user) {
-        String pass = bcryptPasswordEncoder.encode(user.getPassword());
-        String name = user.getName();
-        long id = user.getId();
-        userRepository.setUserInfoById(name, pass, id);
+        user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 
-    public User findById(long id) {
-        return userRepository.findById(id);
+    public User findByName(String name) {
+        return userRepository.findByName(name);
     }
 
+    public User findById(Long id) {
+        return userRepository.findById(id).get();
+    }
 }
